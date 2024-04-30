@@ -1,4 +1,4 @@
-import gradio as gr
+import streamlit as st
 from groq import Groq
 
 # Initialize the Groq client
@@ -24,18 +24,19 @@ def generate_chat_completion(system_message, user_message):
     
     return chat_completion.choices[0].message.content
 
-# Define the Gradio interface
-iface = gr.Interface(
-    fn=generate_chat_completion,
-    inputs=[
-        gr.components.Textbox(lines=1, placeholder="System Message"),
-        gr.components.Textbox(lines=5, placeholder="User Message")
-    ],
-    outputs=gr.components.Textbox(),
-    title="Python Trainer Chatbot",
-    description="Enter system and user messages to get a response.",
-    theme="light"  # Changed to a default theme
-)
+# Streamlit app layout
+st.title("TamJap")
 
-# Launch the Gradio interface
-iface.launch()
+# Input fields for system and user messages
+system_message = st.text_input("System Message:")
+user_message = st.text_input("User Message:")
+
+# Submit button to generate chat completion
+if st.button("Generate Response"):
+    # Check if both inputs are not empty
+    if system_message and user_message:
+        # Generate chat completion and display it
+        response = generate_chat_completion(system_message, user_message)
+        st.write(f"Response: {response}")
+    else:
+        st.warning("Please fill in both fields.")
